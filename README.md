@@ -1,5 +1,5 @@
 # DevoQ3Map2
-DevoQ3Map2 is a map compiler for id Tech 3 games. It's a fork of the [id Tech 3 Map Compiler](https://github.com/id-tech-3-tools/map-compiler), which is a modified version of [Q3Map2](http://q3map2.robotrenegade.com/).
+DevoQ3Map2 is a map compiler for id Tech 3 games by **Devoted**. It's a fork of the [id Tech 3 Map Compiler](https://github.com/id-tech-3-tools/map-compiler), which is a modified version of [Q3Map2](http://q3map2.robotrenegade.com/).
 
 DevoQ3Map2 tries to bring more shaders and global illumination into the game. It's aimed at Jedi Academy (`-game ja`) and the PBR renderer used by [DevoJK](https://github.com/Dadunito/DevoJK), and is meant to stay compatible with the other games the compiler already supports.
 
@@ -23,6 +23,9 @@ DevoQ3Map2 builds on many years of work by others. Thank you to:
 * [Upstream wiki](https://github.com/id-tech-3-tools/map-compiler/wiki): detailed information on every switch the compiler supports.
 * [scripts](scripts): batch scripts for compiling, decompiling and model conversion.
 * [Upstream releases](https://github.com/id-tech-3-tools/map-compiler/releases/): precompiled Windows binaries of the original id Tech 3 Map Compiler.
+
+## Author
+* **Devoted**
 
 ## Contributing
 Feature requests, bug reports and pull requests are welcome under issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
