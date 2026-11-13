@@ -39,6 +39,8 @@ add_executable(mapcompiler
     convert_obj.cpp
     ddslib.cpp
     decals.cpp
+    devogi.cpp
+    devogi_core.cpp
     etclib.cpp
     exportents.cpp
     facebsp.cpp

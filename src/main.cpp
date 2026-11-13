@@ -267,6 +267,12 @@ int main(int argc, char **argv) {
 			break;
 		}
 
+		/* Devoted: DevoGI, the lighting bake of the DevoJK renderer, ahead of time */
+		else if (!Q_stricmp(argv[i], "-devogi")) {
+			r = DevoGIMain(argc - 1, argv + 1);
+			break;
+		}
+
 		/* QBall: export entities */
 		else if (!Q_stricmp(argv[i], "-exportents")) {
 			r = ExportEntitiesMain(argc - 1, argv + 1);

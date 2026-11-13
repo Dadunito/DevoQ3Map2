@@ -3,12 +3,23 @@ DevoQ3Map2 is a map compiler for id Tech 3 games by **Devoted**. It's a fork of 
 
 DevoQ3Map2 tries to bring more shaders and global illumination into the game. It's aimed at Jedi Academy (`-game ja`) and the PBR renderer used by [DevoJK](https://github.com/Dadunito/DevoJK), and is meant to stay compatible with the other games the compiler already supports.
 
-> **Status:** early, work in progress. Right now the code is the same as upstream; new shader and lighting features will be listed in the [changelog](changelog.md) as they're added.
+> **Status:** early, work in progress. New shader and lighting features are listed in the [changelog](changelog.md) as they're added.
 
 ## Goals
 * **More shaders:** support more shader keywords and surface options at compile time, so maps can use richer materials.
 * **Global illumination:** better bounced light (radiosity), ambient light and lightgrid results, so lighting looks more natural in modern renderers.
 * **Keep what works:** existing maps, switches and compile scripts should keep working.
+
+## DevoGI: baking DevoJK's lighting ahead of time
+DevoJK's renderer gives maps new, high resolution lighting (baked global illumination with soft shadows) the first time a map loads, and saves it as `maps/<name>.devogi`. That bake runs on the CPU and can take a few minutes for a big map at high settings.
+
+The `-devogi` stage runs exactly the same bake (the same `devogi_core.cpp` file as the renderer) from the command line, without starting the game. It reads a finished BSP, does not change it, and writes the `.devogi` file. The BSP can be a file on disk or a map inside the game's pk3 files:
+
+```
+mapcompiler -game ja -fs_basepath "C:/Games/EternalJK" -fs_game EternalJK -devogi -scale 8 maps/mp/ffa3.bsp
+```
+
+Put the result in the game's `maps` folder (for example `EternalJK/maps/mp/ffa3.devogi`, or ship it in a pk3 with the map). The game uses it when the player's `r_devoGI_*` settings match the options used for the bake; otherwise it bakes its own. The options have the same names and defaults as the game's settings: `-scale`, `-rays`, `-bounces`, `-aa`, `-sheen`, `-intensity`, `-exposure`, `-sky`, `-saturation`, `-ao`, `-aodistance`, `-aodirect`, `-glow` (`r_devoLights_glow`), `-relight`, `-entitylights`, plus `-threads` and `-out <file>`. Run `mapcompiler -help devogi` for the full list. Use the same `-fs_game` as the players, so the bake sees the same shaders and textures they do.
 
 ## Credits
 DevoQ3Map2 builds on many years of work by others. Thank you to:

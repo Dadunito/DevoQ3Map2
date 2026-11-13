@@ -2,6 +2,7 @@
 #define STRPOOL_IMPLEMENTATION
 #include "assetsys.h"
 #include "assets_loader.hpp"
+#include <cctype>
 
 void replaceAll(std::string& str, const std::string& from, const std::string& to) {
 	if (from.empty())
@@ -86,4 +87,43 @@ bool AssetsLoader::exists(const std::string& filePath) const
 int AssetsLoader::refCount(const std::string& filePath) const
 {
 	return assetsys_file_ref_count(assets, ("//" + filePath).c_str());
+}
+
+// case-insensitive compare that works on every platform
+static int devogi_stricmp(const char *a, const char *b)
+{
+	for (;; a++, b++)
+	{
+		int ca = tolower((unsigned char)*a), cb = tolower((unsigned char)*b);
+		if (ca != cb || !ca)
+			return ca - cb;
+	}
+}
+
+// DevoGI: lists the files in one folder of the virtual file system, across every
+// mounted folder and pk3, so the -devogi stage can read all shader scripts the way
+// the game does. Names come back without the folder, each one once (case-insensitive).
+std::vector<std::string> AssetsLoader::listFiles(const std::string &dir, const std::string &ext) const
+{
+	std::vector<std::string> names;
+	// files are stored under "//" (mounted as "/", like load() above); "/" as a fallback
+	std::string path = "//" + dir;
+	if (assetsys_file_count(assets, path.c_str()) == 0)
+		path = "/" + dir;
+	const int count = assetsys_file_count(assets, path.c_str());
+	for (int i = 0; i < count; i++)
+	{
+		const char *name = assetsys_file_name(assets, path.c_str(), i);
+		if (!name)
+			continue;
+		std::string n = name;
+		if (n.size() < ext.size() || devogi_stricmp(n.c_str() + n.size() - ext.size(), ext.c_str()) != 0)
+			continue;
+		bool seen = false;
+		for (const std::string &o : names)
+			if (devogi_stricmp(o.c_str(), n.c_str()) == 0) { seen = true; break; }
+		if (!seen)
+			names.push_back(n);
+	}
+	return names;
 }

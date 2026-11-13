@@ -399,6 +399,32 @@ void HelpCommon()
 
 }
 
+void HelpDevoGI()
+{
+    struct HelpOption devogi[] = {
+        {"-devogi <filename.bsp>", "Bakes DevoJK's DevoGI lighting (maps/<name>.devogi) for a finished map on the CPU, exactly like the game does on first load. The BSP may also be a map inside the game's pk3 files"},
+        {"-scale <N>", "Lightmap resolution multiplier 1, 2, 4 or 8 (r_devoGI_scale, default 4)"},
+        {"-rays <N>", "Rays per bounce-light sample (r_devoGI_rays, default 128)"},
+        {"-bounces <N>", "Light bounces 1-8 (r_devoGI_bounces, default 8)"},
+        {"-aa <F>", "Shadow anti-aliasing width in texels (r_devoGI_aa, default 2)"},
+        {"-sheen <F>", "Baked glossy sheen (r_devoGI_sheen, default 0.12)"},
+        {"-intensity <F>", "Bounce light strength (r_devoGI_intensity, default 1)"},
+        {"-exposure <F>", "Overall brightness (r_devoGI_exposure, default 1)"},
+        {"-sky <F>", "Ambient light from visible sky (r_devoGI_sky, default 0.5)"},
+        {"-saturation <F>", "Colour bleeding strength (r_devoGI_saturation, default 1.6)"},
+        {"-ao <F>", "Ambient occlusion on bounce light (r_devoGI_ao, default 1)"},
+        {"-aodistance <F>", "Ambient occlusion range (r_devoGI_aoDistance, default 64)"},
+        {"-aodirect <F>", "Contact darkening when a map can't be relit (r_devoGI_aoDirect, default 0.15)"},
+        {"-glow <F>", "Starting strength of glowing lamps (r_devoLights_glow, default 4000)"},
+        {"-relight <0|1>", "Trace direct light from the map's own lights (r_devoGI_relight, default 1)"},
+        {"-entitylights <0|1>", "Use light entities in the BSP (r_devoGI_entityLights, default 1)"},
+        {"-threads <N>", "Bake threads, 0 = all CPU cores (default 0)"},
+        {"-maxscale <N>", "Largest scale allowed (the game also limits it by its GPU, 8 on current GPUs)"},
+        {"-out <file>", "Where to write the .devogi file (default: next to the BSP)"},
+    };
+    HelpOptions("DevoGI Stage", 0, 100, devogi, sizeof(devogi)/sizeof(struct HelpOption));
+}
+
 void HelpMain(const char* arg)
 {
     printf("Usage: q3map2 [stage] [common options...] [stage options...] [stage source file]\n");
@@ -410,6 +436,7 @@ void HelpMain(const char* arg)
         {"-bsp", "BSP Stage"},
         {"-vis", "VIS Stage"},
         {"-light", "Light Stage"},
+        {"-devogi", "DevoGI Stage: bakes DevoJK's lighting ahead of time"},
         {"-analyze", "Analyzing BSP-like file structure"},
         {"-scale", "Scaling"},
         {"-convert", "Converting & Decompiling"},
@@ -424,6 +451,7 @@ void HelpMain(const char* arg)
         HelpBsp,
         HelpVis,
         HelpLight,
+        HelpDevoGI,
         HelpAnalyze,
         HelpScale,
         HelpConvert,

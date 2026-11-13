@@ -1,6 +1,7 @@
 # DevoQ3Map2 (unreleased)
 
 * Forked from [id-tech-3-tools/map-compiler](https://github.com/id-tech-3-tools/map-compiler) 0.2.0 as DevoQ3Map2, aiming to bring more shaders and global illumination into the game. Everything below is the upstream history.
+* New `-devogi` stage: bakes DevoJK's DevoGI lighting (`maps/<name>.devogi`) for a finished BSP on the CPU, with the same code and settings as the game, so players don't have to wait for the bake on a map's first load. Reads maps from disk or from the game's pk3 files, and finds shaders and textures the same way the game does.
 
 # Version 0.2.0
 

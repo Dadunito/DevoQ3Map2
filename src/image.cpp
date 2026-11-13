@@ -384,3 +384,59 @@ image_t *ImageLoad( const char *filename ){
 	/* return the image */
 	return image;
 }
+
+
+/*
+   DevoGI_LoadImagePixels() - Devoted
+   loads an image for the -devogi stage the way the game's renderer does: the name
+   without extension, tried as .jpg, then .png, then .tga (the engine's order), so
+   the bake sees the same texture the game would. The pixels are 8-bit RGBA and must
+   be released with free(). Returns false if no such image exists.
+ */
+
+bool DevoGI_LoadImagePixels( const char *filename, byte **pixels, int *width, int *height ){
+	static const char *exts[] = { ".jpg", ".png", ".tga" };
+	char name[ 1024 ];
+
+	*pixels = NULL;
+	*width = *height = 0;
+	if ( filename == NULL || filename[ 0 ] == 0 || strlen( filename ) > 1000 ) {
+		return false;
+	}
+
+	for ( const char *ext : exts )
+	{
+		strcpy( name, filename );
+		StripExtension( name );
+		strcat( name, ext );
+
+		byte *buffer = NULL;
+		const int size = g_vfs.load( name, (void**) &buffer );
+		if ( size <= 0 || buffer == NULL ) {
+			continue;
+		}
+		if ( ext[ 1 ] == 'j' ) {
+			if ( LoadJPGBuff( buffer, size, pixels, width, height ) == -1 ) {
+				*pixels = NULL;
+			}
+		}
+		else if ( ext[ 1 ] == 'p' ) {
+			LoadPNGBuffer( buffer, size, pixels, width, height );
+		}
+		else {
+			LoadTGABuffer( buffer, buffer + size, pixels, width, height );
+		}
+		delete[] (char*) buffer;
+
+		if ( *pixels != NULL && *width > 0 && *height > 0 ) {
+			return true;
+		}
+		if ( *pixels != NULL ) {
+			free( *pixels );
+		}
+		*pixels = NULL;
+		*width = *height = 0;
+		return false;	// the game stops at the first file it finds, too
+	}
+	return false;
+}

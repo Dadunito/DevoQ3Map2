@@ -1758,6 +1758,9 @@ void LightingAtSample( trace_t * trace, byte styles[ MAX_LIGHTMAPS ], vec3_t col
 int                         LightContributionToPoint( trace_t *trace );
 int                         LightMain( int argc, char **argv );
 
+/* devogi.cpp - Devoted: bakes DevoJK's DevoGI lighting ahead of time */
+int                         DevoGIMain( int argc, char **argv );
+
 
 /* light_trace.c */
 void                        SetupTraceNodes( void );
@@ -1827,6 +1830,7 @@ int                         ExportEntitiesMain( int argc, char **argv );
 void                        ImageFree( image_t *image );
 image_t                     *ImageFind( const char *filename );
 image_t                     *ImageLoad( const char *filename );
+bool                        DevoGI_LoadImagePixels( const char *filename, byte **pixels, int *width, int *height );
 
 
 /* shaders.c */
