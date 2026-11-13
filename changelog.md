@@ -1,3 +1,7 @@
+# DevoQ3Map2 (unreleased)
+
+* Forked from [id-tech-3-tools/map-compiler](https://github.com/id-tech-3-tools/map-compiler) 0.2.0 as DevoQ3Map2, aiming to bring more shaders and global illumination into the game. Everything below is the upstream history.
+
 # Version 0.2.0
 
 * Replaced old VFS with the new one, to fix the bug where assets were loading in the opposite order. This also possibly increases the load speed. [#55](https://github.com/id-tech-3-tools/map-compiler/pull/55)

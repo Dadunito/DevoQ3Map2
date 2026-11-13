@@ -1,20 +1,35 @@
-# id Tech 3 Map Compiler
-This project is a modified version of [Q3Map2](http://q3map2.robotrenegade.com/), which is a map compiler for games based on id Tech 3 engine, forked from [NetRadiant's q3map2 2.5.17n](https://gitlab.com/xonotic/netradiant/tree/225d4bba22a409bc1c375a2029d2162d336f0070).
-All API changes, bug fixes and new features are listed in the [changelog](changelog.md).
+# DevoQ3Map2
+DevoQ3Map2 is a map compiler for id Tech 3 games. It's a fork of the [id Tech 3 Map Compiler](https://github.com/id-tech-3-tools/map-compiler), which is a modified version of [Q3Map2](http://q3map2.robotrenegade.com/).
 
-## Wiki
-The [wiki](https://github.com/id-tech-3-tools/map-compiler/wiki) page has detailed information about all switches map compiler currently supports.
+DevoQ3Map2 tries to bring more shaders and global illumination into the game. It's aimed at Jedi Academy (`-game ja`) and the PBR renderer used by [DevoJK](https://github.com/Dadunito/DevoJK), and is meant to stay compatible with the other games the compiler already supports.
 
-## Scripts
-The [scripts](https://github.com/id-tech-3-tools/map-compiler/tree/master/scripts) directory contains fully functional batch scripts to do compiling, decompiling and model conversion work.
+> **Status:** early, work in progress. Right now the code is the same as upstream; new shader and lighting features will be listed in the [changelog](changelog.md) as they're added.
 
-## Precompiled binaries
-Windows binaries can be found under [releases](https://github.com/id-tech-3-tools/map-compiler/releases/) page. 
+## Goals
+* **More shaders:** support more shader keywords and surface options at compile time, so maps can use richer materials.
+* **Global illumination:** better bounced light (radiosity), ambient light and lightgrid results, so lighting looks more natural in modern renderers.
+* **Keep what works:** existing maps, switches and compile scripts should keep working.
+
+## Credits
+DevoQ3Map2 builds on many years of work by others. Thank you to:
+* **id Software**, for the Quake III Arena engine and the original q3map tools released under the GPL.
+* **Randy "ydnar" Reddig** and the GtkRadiant contributors, for creating Q3Map2 and its lighting system.
+* **The NetRadiant / Xonotic developers**, for maintaining [NetRadiant's q3map2 2.5.17n](https://gitlab.com/xonotic/netradiant/tree/225d4bba22a409bc1c375a2029d2162d336f0070), which the id Tech 3 Map Compiler is forked from.
+* **isRyven, Aciz and the [id-tech-3-tools](https://github.com/id-tech-3-tools) team**, for the id Tech 3 Map Compiler: the new VFS, lightgrid and floodlight fixes, model conversion, the cleaned-up switches and much more (see the [changelog](changelog.md)).
+* The authors of the bundled libraries listed below.
+
+## Documentation
+* [Changelog](changelog.md): all API changes, bug fixes and new features, including those from the id Tech 3 Map Compiler.
+* [Upstream wiki](https://github.com/id-tech-3-tools/map-compiler/wiki): detailed information on every switch the compiler supports.
+* [scripts](scripts): batch scripts for compiling, decompiling and model conversion.
+* [Upstream releases](https://github.com/id-tech-3-tools/map-compiler/releases/): precompiled Windows binaries of the original id Tech 3 Map Compiler.
 
 ## Contributing
-You are free to make feature requests/bug reports under issues, as well as pull requests of course. More information can be found [here](CONTRIBUTING.md).
+Feature requests, bug reports and pull requests are welcome under issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
-## External dependencies 
+Fixes that also apply to the original compiler are worth sending to [id-tech-3-tools/map-compiler](https://github.com/id-tech-3-tools/map-compiler) as well.
+
+## External dependencies
 All required dependencies are shipped with the project.  
 [assetsys](https://github.com/mattiasgustavsson/libs/blob/master/docs/assetsys.md) loads binary assets into virtual file system.  
 The library used in a project contains [custom changes](https://github.com/isRyven/libs). MIT License.  
@@ -27,7 +42,7 @@ The library used in a project contains [custom changes](https://github.com/isRyv
 
 ## Compiling binaries
 
-### Compiling on linux
+### Compiling on Linux
 ```
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE .. && make
@@ -36,8 +51,8 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE .. && make
 ### Compiling on Windows
 Several options are available.
 
-#### Visual Studio 2017
-In VS2017 you can natively open up the CMake project folder: `File > Open > CMake`, and compile the project using CMake menu.
+#### Visual Studio
+Recent Visual Studio versions can open the CMake project folder directly: `File > Open > Folder` (or `File > Open > CMake` in VS2017), then build from the CMake menu.
 
 #### Compile from command line
 ```
@@ -51,11 +66,11 @@ cmake --build . --target mapcompiler --config Release
 ```
 mkdir build
 cd build
-cmake .. -G "Visual Studio 15 2017"
+cmake ..
 ```
-Open up `sln` in Visual Studio and build solution from there.
+Open the generated `sln` in Visual Studio and build the solution from there. Pass `-G "<generator>"` to pick a specific Visual Studio version.
 
-# Original Q3Map2 License 
+# Original Q3Map2 License
 ```
 Copyright (C) 1999-2007 id Software, Inc. and contributors.
 For a list of contributors, see the accompanying CONTRIBUTORS file.
@@ -81,4 +96,3 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 This code has been altered significantly from its original form, to support
 several games based on the Quake III Arena engine, in the form of "Q3Map2."
 ```
-
