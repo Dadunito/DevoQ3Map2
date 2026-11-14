@@ -16,6 +16,8 @@ include_directories(AFTER "${CMAKE_SOURCE_DIR}/third_party/picomodel/src")
 include_directories(AFTER "${CMAKE_SOURCE_DIR}/third_party/picomodel/table-builder")
 include_directories(AFTER "${CMAKE_SOURCE_DIR}/third_party/tinyformat")
 include_directories(AFTER "${CMAKE_SOURCE_DIR}/third_party/table-builder")
+# DevoGI GPU tracer: Khronos Vulkan headers (the Vulkan library itself is loaded at run time)
+include_directories(AFTER "${CMAKE_SOURCE_DIR}/third_party/vulkan")
 
 file(GLOB headers *.h)
 
@@ -41,6 +43,7 @@ add_executable(mapcompiler
     decals.cpp
     devogi.cpp
     devogi_core.cpp
+    devogi_gpu.cpp
     etclib.cpp
     exportents.cpp
     facebsp.cpp

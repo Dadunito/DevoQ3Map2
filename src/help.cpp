@@ -419,6 +419,7 @@ void HelpDevoGI()
         {"-relight <0|1>", "Trace direct light from the map's own lights (r_devoGI_relight, default 1)"},
         {"-entitylights <0|1>", "Use light entities in the BSP (r_devoGI_entityLights, default 1)"},
         {"-threads <N>", "Bake threads, 0 = all CPU cores (default 0)"},
+        {"-nogpu", "Trace all rays on the CPU (by default the graphics card traces the bounce light when Vulkan is available)"},
         {"-maxscale <N>", "Largest scale allowed (the game also limits it by its GPU, 8 on current GPUs)"},
         {"-out <file>", "Where to write the .devogi file (default: next to the BSP)"},
     };
