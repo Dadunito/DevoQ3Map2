@@ -378,7 +378,7 @@ int DevoGIMain( int argc, char **argv ){
 	/* options: the names and defaults of the game's r_devoGI_* settings */
 	dgSettings settings;
 	char outPath[ 1024 ] = "";
-	int maxScale = 16;	// the game also limits this by its GPU's texture size (8 on all current GPUs)
+	int maxScale = 16;	// the game also limits this by its GPU's texture size (128 * scale per page)
 
 	// main() passes every argument; ours are the ones between "-devogi" and the map
 	int i = 1;
@@ -469,7 +469,7 @@ int DevoGIMain( int argc, char **argv ){
 	DG_ExtractLights( mapName.c_str(), bsp.data(), settings );
 	const int scale = DG_ChooseScale( settings, maxScale );
 	if ( scale != settings.scale ) {
-		Sys_Printf( "DevoGI: scale %d is used (1, 2, 4 or 8)\n", scale );
+		Sys_Printf( "DevoGI: scale %d is used (1 to 16, limited by -maxscale)\n", scale );
 	}
 
 	dgResult result;

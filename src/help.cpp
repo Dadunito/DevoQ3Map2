@@ -403,7 +403,7 @@ void HelpDevoGI()
 {
     struct HelpOption devogi[] = {
         {"-devogi <filename.bsp>", "Bakes DevoJK's DevoGI lighting (maps/<name>.devogi) for a finished map on the CPU, exactly like the game does on first load. The BSP may also be a map inside the game's pk3 files"},
-        {"-scale <N>", "Lightmap resolution multiplier 1, 2, 4 or 8 (r_devoGI_scale, default 4)"},
+        {"-scale <N>", "Lightmap resolution multiplier 1 to 16, the same for every surface (r_devoGI_scale, default 4)"},
         {"-rays <N>", "Rays per bounce-light sample (r_devoGI_rays, default 128)"},
         {"-bounces <N>", "Light bounces 1-16 (r_devoGI_bounces, default 8)"},
         {"-livebounces <N>", "Light bounces 1-32 of the bounce-only light for live lighting (r_devoGI_liveBounces, default 24)"},
