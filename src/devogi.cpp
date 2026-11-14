@@ -402,6 +402,7 @@ int DevoGIMain( int argc, char **argv ){
 		else if ( !Q_stricmp( a, "-rays" ) ) settings.rays = atoi( next() );
 		else if ( !Q_stricmp( a, "-bounces" ) ) settings.bounces = atoi( next() );
 		else if ( !Q_stricmp( a, "-livebounces" ) ) settings.liveBounces = atoi( next() );
+		else if ( !Q_stricmp( a, "-livesky" ) ) settings.liveSky = atof( next() );
 		else if ( !Q_stricmp( a, "-aa" ) ) settings.aa = atof( next() );
 		else if ( !Q_stricmp( a, "-sheen" ) ) settings.sheen = atof( next() );
 		else if ( !Q_stricmp( a, "-intensity" ) ) settings.intensity = atof( next() );
