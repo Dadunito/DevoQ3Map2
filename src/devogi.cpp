@@ -420,6 +420,7 @@ int DevoGIMain( int argc, char **argv ){
 		else if ( !Q_stricmp( a, "-entitylights" ) ) settings.entityLights = atoi( next() );
 		else if ( !Q_stricmp( a, "-threads" ) ) settings.threads = atoi( next() );
 		else if ( !Q_stricmp( a, "-nogpu" ) ) settings.gpu = 0;
+		else if ( !Q_stricmp( a, "-gpudirect" ) ) DG_SetGpuDirect( true );
 		else if ( !Q_stricmp( a, "-maxscale" ) ) maxScale = atoi( next() );
 		else if ( !Q_stricmp( a, "-out" ) ) strcpy( outPath, ExpandArg( next() ) );
 		else Sys_FPrintf( SYS_WRN, "WARNING: DevoGI: unknown option \"%s\"\n", a );
