@@ -24,6 +24,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
 
 add_subdirectory("src")
+add_subdirectory("tools/precompile")
 
 if(MSVC)
     set_target_properties(mapcompiler PROPERTIES LINK_FLAGS /STACK:8000000)
