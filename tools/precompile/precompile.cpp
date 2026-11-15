@@ -15,8 +15,12 @@ game, so nobody has to sit through a bake while a map loads.
     the settings from EternalJK/eternaljk.cfg, so the game picks the files up
     as if it had baked them itself.
 
-High spec is r_devoGI_live 1 (live sun and lamps, files named <map>.live.devogi),
-low spec is r_devoGI_live 0 (everything baked, <map>.devogi).
+High spec is r_devoGI_live 1 (live sun and light sources, files named
+<map>.live.devogi), low spec is r_devoGI_live 0 (everything baked, <map>.devogi).
+
+Maps made for rend2 bring their own HDR lighting (maps/<name>/*.hdr, *.raw). The
+game leaves DevoGI off for those, so they're marked in the list and left out of
+"All" - baking them would only make files the game never uses.
 
 It's one file of plain Win32 on purpose: easy to read, easy to change, nothing
 to install. Build it with the rest of DevoQ3Map2 (tools/precompile).
@@ -137,7 +141,30 @@ static std::vector<std::string> ZipNames( const std::string &path )
 struct MapEntry {
 	std::string bsp;		// path inside the game, e.g. maps/mp/ffa3.bsp
 	std::string source;		// where it was found, e.g. assets0.pk3
+	bool rend2 = false;		// brings its own rend2 lighting (see IsRend2)
 };
+
+// every file name seen in the pk3s and folders, lower case (for the rend2 check)
+static std::vector<std::string> g_allFiles;
+
+/*
+rend2 keeps a map's own lighting next to it, in maps/<map name>/ (just the name,
+no mp/): HDR lightmaps (lm_0000.hdr), the light grid and vertex light (.raw), and
+reflection probes in cubemaps/<map name>/. The game's renderer checks the same.
+*/
+static bool IsRend2( const std::string &bsp )
+{
+	std::string name = Lower( bsp.substr( 0, bsp.size() - 4 ) );
+	name = name.substr( name.find_last_of( '/' ) + 1 );
+	const std::string dir = "maps/" + name + "/", probes = "cubemaps/" + name + "/";
+	for ( const std::string &f : g_allFiles ) {
+		if ( f.compare( 0, dir.size(), dir ) == 0 && ( EndsWith( f, ".hdr" ) || EndsWith( f, ".raw" ) ) )
+			return true;
+		if ( f.compare( 0, probes.size(), probes ) == 0 )
+			return true;
+	}
+	return false;
+}
 
 static void FindLooseMaps( const std::string &root, const std::string &rel, std::map<std::string, MapEntry> &out, const std::string &label )
 {
@@ -150,9 +177,12 @@ static void FindLooseMaps( const std::string &root, const std::string &rel, std:
 		if ( name == "." || name == ".." )
 			continue;
 		const std::string sub = rel + "/" + name;
-		if ( fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
+		if ( fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) {
 			FindLooseMaps( root, sub, out, label );
-		else if ( EndsWith( Lower( name ), ".bsp" ) ) {
+			continue;
+		}
+		g_allFiles.push_back( Lower( sub ) );
+		if ( EndsWith( Lower( name ), ".bsp" ) ) {
 			const std::string key = Lower( sub );
 			if ( !out.count( key ) )
 				out[key] = { sub, label };
@@ -173,6 +203,7 @@ static std::vector<MapEntry> FindMaps( const std::string &game )
 			do {
 				for ( const std::string &n : ZipNames( dir + "\\" + fd.cFileName ) ) {
 					const std::string l = Lower( n );
+					g_allFiles.push_back( l );
 					if ( l.compare( 0, 5, "maps/" ) == 0 && EndsWith( l, ".bsp" ) )
 						found[l] = { n, fd.cFileName };
 				}
@@ -180,10 +211,13 @@ static std::vector<MapEntry> FindMaps( const std::string &game )
 			FindClose( h );
 		}
 		FindLooseMaps( dir, "maps", found, std::string( folder ) + " folder" );
+		FindLooseMaps( dir, "cubemaps", found, "" );	// only notes the files, for the rend2 check
 	}
 	std::vector<MapEntry> maps;
-	for ( auto &kv : found )
+	for ( auto &kv : found ) {
+		kv.second.rend2 = IsRend2( kv.second.bsp );
 		maps.push_back( kv.second );
+	}
 	return maps;
 }
 
@@ -277,8 +311,12 @@ static std::string OutputName( const MapEntry &m, bool live )
 	return g_game + "\\EternalJK\\" + base + ( live ? ".live.devogi" : ".devogi" );
 }
 
+static const char *kRend2Status = "Rend2 map, *.HDR and *.RAW detected, not recommended to bake";
+
 static std::string StatusOf( const MapEntry &m )
 {
+	if ( m.rend2 )
+		return kRend2Status;
 	const bool high = FileExists( OutputName( m, true ) ), low = FileExists( OutputName( m, false ) );
 	if ( high && low )
 		return "high + low";
@@ -383,7 +421,7 @@ static DWORD WINAPI Worker( LPVOID )
 			PostText( WM_BAKE_ROW, job.row, "baking low spec..." );
 			ok = BakeOne( job.map, false, settings ) && ok;
 		}
-		PostText( WM_BAKE_ROW, job.row, g_cancel ? "stopped" : ok ? StatusOf( job.map ) : "FAILED - see the compiler log" );
+		PostText( WM_BAKE_ROW, job.row, g_cancel ? "stopped" : ok ? ( job.map.rend2 ? "baked, but the game keeps its rend2 lighting" : StatusOf( job.map ) ) : "FAILED - see the compiler log" );
 	}
 	PostMessageA( g_wnd, WM_BAKE_DONE, 0, 0 );
 	return 0;
@@ -460,7 +498,7 @@ static LRESULT CALLBACK WndProc( HWND wnd, UINT msg, WPARAM wp, LPARAM lp )
 		g_list = make( WC_LISTVIEWA, "", LVS_REPORT | LVS_SHOWSELALWAYS | WS_BORDER, ID_LIST );
 		ListView_SetExtendedListViewStyle( g_list, LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES );
 		const char *cols[] = { "Map", "Found in", "Baked" };
-		const int widths[] = { 260, 200, 200 };
+		const int widths[] = { 230, 150, 320 };
 		for ( int i = 0; i < 3; i++ ) {
 			LVCOLUMNA c = {};
 			c.mask = LVCF_TEXT | LVCF_WIDTH;
@@ -493,8 +531,9 @@ static LRESULT CALLBACK WndProc( HWND wnd, UINT msg, WPARAM wp, LPARAM lp )
 			return 0;
 		case ID_ALL:
 		case ID_NONE:
+			// "All" leaves rend2 maps out: the game wouldn't use their DevoGI lighting
 			for ( int i = 0; i < ListView_GetItemCount( g_list ); i++ )
-				ListView_SetCheckState( g_list, i, LOWORD( wp ) == ID_ALL );
+				ListView_SetCheckState( g_list, i, LOWORD( wp ) == ID_ALL && !g_maps[i].rend2 );
 			return 0;
 		case ID_EXIT:
 			if ( g_worker ) {	// "Stop": finish nothing more, end the bake that is running
