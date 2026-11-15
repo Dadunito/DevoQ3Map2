@@ -407,6 +407,8 @@ void HelpDevoGI()
         {"-rays <N>", "Rays per bounce-light sample (r_devoGI_rays, default 128)"},
         {"-bounces <N>", "Light bounces 1-16 (r_devoGI_bounces, default 8)"},
         {"-livebounces <N>", "Light bounces 1-32 of the live lighting layer: sky light and lamp bounce, no sun (r_devoGI_liveBounces, default 24)"},
+        {"-live", "Bake for live lighting (r_devoGI_live 1): only the live layer, lamps and probes; writes <map>.live.devogi"},
+        {"-sunbounceblur <F>", "How wide the live layer's sun bounce is spread, in game units (default 160)"},
         {"-livesky <F>", "Sky light in the live lighting layer, times -sky (r_devoGI_liveSky, default 6)"},
         {"-aa <F>", "Shadow anti-aliasing width in texels (r_devoGI_aa, default 2)"},
         {"-sheen <F>", "Baked glossy sheen (r_devoGI_sheen, default 0.12)"},

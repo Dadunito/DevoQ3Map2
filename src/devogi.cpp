@@ -403,6 +403,8 @@ int DevoGIMain( int argc, char **argv ){
 		else if ( !Q_stricmp( a, "-bounces" ) ) settings.bounces = atoi( next() );
 		else if ( !Q_stricmp( a, "-livebounces" ) ) settings.liveBounces = atoi( next() );
 		else if ( !Q_stricmp( a, "-livesky" ) ) settings.liveSky = atof( next() );
+		else if ( !Q_stricmp( a, "-live" ) ) settings.liveOnly = 1;
+		else if ( !Q_stricmp( a, "-sunbounceblur" ) ) settings.sunBounceBlur = atof( next() );
 		else if ( !Q_stricmp( a, "-aa" ) ) settings.aa = atof( next() );
 		else if ( !Q_stricmp( a, "-sheen" ) ) settings.sheen = atof( next() );
 		else if ( !Q_stricmp( a, "-intensity" ) ) settings.intensity = atof( next() );
@@ -451,7 +453,7 @@ int DevoGIMain( int argc, char **argv ){
 	/* where the result goes: next to the BSP, or maps/... under the current folder */
 	if ( !outPath[ 0 ] ) {
 		std::string o = vfsName.empty() ? std::string( source ) : mapName;
-		o = o.substr( 0, o.size() - 4 ) + ".devogi";
+		o = o.substr( 0, o.size() - 4 ) + ( settings.liveOnly ? ".live.devogi" : ".devogi" );
 		strcpy( outPath, o.c_str() );
 	}
 
@@ -494,8 +496,9 @@ int DevoGIMain( int argc, char **argv ){
 		devogi_progressLine = false;
 	}
 	Sys_Printf( "DevoGI: wrote %s (%.1f MB, %dx%d lightmaps)\n", outPath, file.size() / ( 1024.0 * 1024.0 ), result.pageSize, result.pageSize );
-	Sys_Printf( "Put it in the game's maps folder (e.g. EternalJK/%s.devogi). The game uses it when\n",
-				mapName.substr( 0, mapName.size() - 4 ).c_str() );
-	Sys_Printf( "the player's r_devoGI_* settings match the options used here (r_devoGI_scale %d).\n", scale );
+	Sys_Printf( "Put it in the game's maps folder (e.g. EternalJK/%s%s). The game uses it when\n",
+				mapName.substr( 0, mapName.size() - 4 ).c_str(), settings.liveOnly ? ".live.devogi" : ".devogi" );
+	Sys_Printf( "the player's r_devoGI_* settings match the options used here (r_devoGI_scale %d, r_devoGI_live %d).\n",
+				scale, settings.liveOnly ? 1 : 0 );
 	return 0;
 }
