@@ -403,6 +403,7 @@ int DevoGIMain( int argc, char **argv ){
 		else if ( !Q_stricmp( a, "-bounces" ) ) settings.bounces = atoi( next() );
 		else if ( !Q_stricmp( a, "-livebounces" ) ) settings.liveBounces = atoi( next() );
 		else if ( !Q_stricmp( a, "-livesky" ) ) settings.liveSky = atof( next() );
+		else if ( !Q_stricmp( a, "-lampboost" ) ) settings.lampBoost = atof( next() );
 		else if ( !Q_stricmp( a, "-live" ) ) settings.liveOnly = 1;
 		else if ( !Q_stricmp( a, "-sunbounceblur" ) ) settings.sunBounceBlur = atof( next() );
 		else if ( !Q_stricmp( a, "-aa" ) ) settings.aa = atof( next() );

@@ -239,6 +239,7 @@ static const Setting kSettings[] = {
 	{ "r_devoGI_bounces",		"-bounces",			"16" },
 	{ "r_devoGI_liveBounces",	"-livebounces",		"24" },
 	{ "r_devoGI_liveSky",		"-livesky",			"6" },
+	{ "r_devoGI_lampBoost",		"-lampboost",		"1.5" },
 	{ "r_devoGI_aa",			"-aa",				"2.0" },
 	{ "r_devoGI_sheen",			"-sheen",			"0.12" },
 	{ "r_devoGI_intensity",		"-intensity",		"1.0" },
