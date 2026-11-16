@@ -603,7 +603,9 @@ int WINAPI WinMain( HINSTANCE inst, HINSTANCE, LPSTR, int show )
 	wc.hInstance = inst;
 	wc.hCursor = LoadCursor( NULL, IDC_ARROW );
 	wc.hbrBackground = (HBRUSH)( COLOR_BTNFACE + 1 );
-	wc.hIcon = LoadIcon( NULL, IDI_APPLICATION );
+	wc.hIcon = LoadIcon( inst, MAKEINTRESOURCE( 1 ) );	// the oven, from precompile.rc
+	if ( !wc.hIcon )
+		wc.hIcon = LoadIcon( NULL, IDI_APPLICATION );
 	wc.lpszClassName = "DevoPrecompile";
 	RegisterClassA( &wc );
 	g_wnd = CreateWindowA( wc.lpszClassName, "Precompile Shaders - DevoJK lighting", WS_OVERLAPPEDWINDOW,
