@@ -11,7 +11,9 @@ DevoQ3Map2 tries to bring more shaders and global illumination into the game. It
 * **Keep what works:** existing maps, switches and compile scripts should keep working.
 
 ## DevoGI: baking DevoJK's lighting ahead of time
-DevoJK's renderer gives maps new, high resolution lighting (baked global illumination with soft shadows) the first time a map loads, and saves it as `maps/<name>.devogi`. That bake runs on the CPU and can take a few minutes for a big map at high settings.
+DevoJK's renderer gives maps new, high resolution lighting (baked global illumination with soft shadows) the first time a map loads, and saves it as `maps/<name>.devogi`. That bake can take several minutes for a big map at high settings.
+
+**Download:** Windows x64 builds are on the [releases page](https://github.com/Dadunito/DevoQ3Map2/releases/latest). Besides `mapcompiler.exe` they include **Precompile Shaders**, a small window that lists every map in the game's pk3 files and bakes the ticked ones for high spec, low spec or both, using the player's own settings.
 
 The `-devogi` stage runs exactly the same bake (the same `devogi_core.cpp` file as the renderer) from the command line, without starting the game. It reads a finished BSP, does not change it, and writes the `.devogi` file. The BSP can be a file on disk or a map inside the game's pk3 files:
 
@@ -19,7 +21,7 @@ The `-devogi` stage runs exactly the same bake (the same `devogi_core.cpp` file 
 mapcompiler -game ja -fs_basepath "C:/Games/EternalJK" -fs_game EternalJK -devogi -scale 8 maps/mp/ffa3.bsp
 ```
 
-Put the result in the game's `maps` folder (for example `EternalJK/maps/mp/ffa3.devogi`, or ship it in a pk3 with the map). The game uses it when the player's `r_devoGI_*` settings match the options used for the bake; otherwise it bakes its own. The options have the same names and defaults as the game's settings: `-scale`, `-rays`, `-bounces`, `-aa`, `-sheen`, `-intensity`, `-exposure`, `-sky`, `-saturation`, `-ao`, `-aodistance`, `-aodirect`, `-glow` (`r_devoLights_glow`), `-relight`, `-entitylights`, plus `-threads` and `-out <file>`. Run `mapcompiler -help devogi` for the full list. Use the same `-fs_game` as the players, so the bake sees the same shaders and textures they do.
+Put the result in the game's `maps` folder (for example `EternalJK/maps/mp/ffa3.devogi`, or ship it in a pk3 with the map). The game uses it when the player's `r_devoGI_*` settings match the options used for the bake; otherwise it bakes its own. The options have the same names and defaults as the game's settings: `-scale`, `-rays`, `-bounces`, `-livebounces`, `-aa`, `-sheen`, `-intensity`, `-exposure`, `-sky`, `-livesky`, `-saturation`, `-ao`, `-aodistance`, `-aodirect`, `-glow` (`r_devoLights_glow`), `-lampboost`, `-relight`, `-entitylights`, plus `-threads` and `-out <file>`. Add `-live` to bake for DevoJK's high spec mode (`r_devoGI_live 1`, writes `<map>.live.devogi`); without it the bake is for low spec. Bounce light is traced on the graphics card when Vulkan is available (`-nogpu` turns that off, `-gpudirect` traces the direct light there too). Run `mapcompiler -help devogi` for the full list. Use the same `-fs_game` as the players, so the bake sees the same shaders and textures they do.
 
 ## Credits
 DevoQ3Map2 builds on many years of work by others. Thank you to:
